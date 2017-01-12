@@ -8,7 +8,7 @@ import java.util.HashMap;
 public class Kontakt {
     private HashMap<String,String> emailAdressen;
     private int id;
-    private static int letzteID = 0;
+    private static int letzteID = 1;
     private String name;
     private HashMap<String,String> telefonNummern;
     private String vorname;

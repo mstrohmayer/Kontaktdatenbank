@@ -7,6 +7,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.Border;
+import javax.swing.border.TitledBorder;
 import java.awt.FlowLayout;
 
 /**
@@ -17,8 +18,10 @@ public class KontaktPanel extends JPanel {
     private JPanel[] jPanels;
     private JTextField[] jTextFields;
     private JLabel[] jLabels;
+    private TitledBorder jtBorder;
 
-    public KontaktPanel(){
+    public KontaktPanel(Kontakt kontakt){
+        this.kontakt = kontakt;
         initComponents();
     }
     private void initComponents() {
@@ -36,7 +39,8 @@ public class KontaktPanel extends JPanel {
             jPanels[i].add(jTextFields[i]);
             this.add(jPanels[i]);
         }
-        //Borderscheißdreck
+        jtBorder = new TitledBorder("ID: "+ kontakt.getID());
+        this.setBorder(jtBorder);
 
     }
 
@@ -55,12 +59,14 @@ public class KontaktPanel extends JPanel {
         }
     }
 
-    public void setKontakt(Kontakt kontakt){
-        this.kontakt = kontakt;
+    public void setKontakt(Kontakt k){
+        this.kontakt = k;
         jTextFields[0].setText(kontakt.getName());
         jTextFields[1].setText(kontakt.getVorname());
         jTextFields[2].setText(kontakt.gibNummer("privat"));
         jTextFields[3].setText(kontakt.gibEmail("privat"));
+        jtBorder.setTitle("ID: " + kontakt.getID());
+        this.setBorder(jtBorder);
     }
 
     public void storeKontakt(){

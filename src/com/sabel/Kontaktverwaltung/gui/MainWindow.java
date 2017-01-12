@@ -2,7 +2,6 @@ package com.sabel.Kontaktverwaltung.gui;
 
 import com.sabel.Kontaktverwaltung.model.Datenbank;
 import com.sabel.Kontaktverwaltung.model.Kontakt;
-import oracle.jrockit.jfr.JFR;
 
 import javax.swing.*;
 import java.awt.BorderLayout;
@@ -50,19 +49,23 @@ public class MainWindow extends JFrame{
         jpSouth.add(jtbEdit);
         jpSouth.add(jtbNew);
         c.add(jpSouth, BorderLayout.SOUTH);  //Zeit wäre jetzt aus :-(
-        kontaktPanel = new KontaktPanel();
-        c.add(kontaktPanel, BorderLayout.CENTER);
+
 
         db = new Datenbank();
         angezeigerKontakt = db.gibKontakt(0);
+        kontaktPanel = new KontaktPanel(angezeigerKontakt);
+        c.add(kontaktPanel, BorderLayout.CENTER);
+
         kontaktIndex = 0;
         kontaktPanel.setKontakt(angezeigerKontakt);
         kontaktPanel.deactivateFields();
+        update();
 
     }
 
     private void update(){
-        kontaktPanel.setKontakt(db.gibKontakt(kontaktIndex));
+        angezeigerKontakt = db.gibKontakt(kontaktIndex);
+        kontaktPanel.setKontakt(angezeigerKontakt);
     }
 
     private void toggleButtons(boolean status){
