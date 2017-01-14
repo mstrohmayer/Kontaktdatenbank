@@ -6,7 +6,7 @@ import java.util.ArrayList;
  * Created by Matthias on 12.01.2017.
  */
 public class Datenbank {
-    private ArrayList<Kontakt> kontakte;
+    private List<Kontakt> kontakte;
 
     public Datenbank(){
         kontakte = new ArrayList<>();
