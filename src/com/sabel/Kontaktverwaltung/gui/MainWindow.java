@@ -3,7 +3,11 @@ package com.sabel.Kontaktverwaltung.gui;
 import com.sabel.Kontaktverwaltung.model.Datenbank;
 import com.sabel.Kontaktverwaltung.model.Kontakt;
 
-import javax.swing.*;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JToggleButton;
 import java.awt.BorderLayout;
 import java.awt.Container;
 import java.awt.event.ActionEvent;
@@ -126,7 +130,6 @@ public class MainWindow extends JFrame{
                     jtbEdit.setText("Bearbeiten");
                     toggleButtons(true);
                     jtbNew.setEnabled(true);
-                    // update();
                 }
             }
         });
@@ -148,7 +151,6 @@ public class MainWindow extends JFrame{
                     jtbNew.setText("Neu");
                     toggleButtons(true);
                     jtbEdit.setEnabled(true);
-                    //update();
                 }
             }
         });
