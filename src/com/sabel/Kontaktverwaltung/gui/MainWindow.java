@@ -20,9 +20,14 @@ public class MainWindow extends JFrame{
     private JPanel jpWest, jpEast, jpSouth;
     private JToggleButton jtbNew, jtbEdit;
     private JButton jbLeft, jbRight, jbSearch;
-    private int kontaktIndex;
+    private int index;
 
     public MainWindow(){
+        super("Kontakte");
+        db = new Datenbank();
+        angezeigerKontakt = db.gibKontakt(0);
+        index = angezeigerKontakt.getID();
+
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
         this.initComponents();
         this.initEvents();
@@ -32,15 +37,18 @@ public class MainWindow extends JFrame{
     }
 
     private void initComponents() {
+
         c = this.getContentPane();
         jpWest = new JPanel();
         jbLeft = new JButton("<");
         jpWest.add(jbLeft);
         c.add(jpWest, BorderLayout.WEST);
+
         jpEast = new JPanel();
         jbRight = new JButton(">");
         jpEast.add(jbRight);
         c.add(jpEast, BorderLayout.EAST);
+
         jpSouth = new JPanel();
         jbSearch = new JButton("Suchen");
         jtbEdit = new JToggleButton("Bearbeiten");
@@ -50,21 +58,14 @@ public class MainWindow extends JFrame{
         jpSouth.add(jtbNew);
         c.add(jpSouth, BorderLayout.SOUTH);  //Zeit wäre jetzt aus :-(
 
-
-        db = new Datenbank();
-        angezeigerKontakt = db.gibKontakt(0);
         kontaktPanel = new KontaktPanel(angezeigerKontakt);
-        c.add(kontaktPanel, BorderLayout.CENTER);
-
-        kontaktIndex = 0;
-        kontaktPanel.setKontakt(angezeigerKontakt);
         kontaktPanel.deactivateFields();
-        update();
+        c.add(kontaktPanel, BorderLayout.CENTER);
 
     }
 
     private void update(){
-        angezeigerKontakt = db.gibKontakt(kontaktIndex);
+        angezeigerKontakt = db.gibKontakt(index);
         kontaktPanel.setKontakt(angezeigerKontakt);
     }
 
@@ -79,7 +80,7 @@ public class MainWindow extends JFrame{
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
                 int size = db.anzahlKontakte();
-                kontaktIndex = ((size + kontaktIndex) - 1) % size;
+                index = ((size + index) - 1) % size;
                 update();
             }
         });
@@ -87,7 +88,7 @@ public class MainWindow extends JFrame{
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
                 int size = db.anzahlKontakte();
-                kontaktIndex = (kontaktIndex + 1) % size;
+                index = (index + 1) % size;
                 update();
             }
         });
@@ -101,7 +102,7 @@ public class MainWindow extends JFrame{
                 }
                 if (db.suchen(suche) != null){
                     angezeigerKontakt = db.suchen(suche);
-                    kontaktIndex = angezeigerKontakt.getID();
+                    index = angezeigerKontakt.getID();
                     update();
                 }else{
                     JOptionPane.showMessageDialog(MainWindow.this,"Kontakt nicht gefunden!");
@@ -119,11 +120,13 @@ public class MainWindow extends JFrame{
                     kontaktPanel.activateFields();
                 }else {
                     kontaktPanel.storeKontakt();
+                    angezeigerKontakt = kontaktPanel.getKontakt();
+                    db.hinzufuegen(angezeigerKontakt);
                     kontaktPanel.deactivateFields();
                     jtbEdit.setText("Bearbeiten");
                     toggleButtons(true);
                     jtbNew.setEnabled(true);
-                    update();
+                    // update();
                 }
             }
         });
@@ -140,12 +143,12 @@ public class MainWindow extends JFrame{
                     kontaktPanel.storeKontakt();
                     angezeigerKontakt = kontaktPanel.getKontakt();
                     db.hinzufuegen(angezeigerKontakt);
-                    kontaktIndex = db.anzahlKontakte()-1;
+                    index = db.anzahlKontakte()-1;
                     kontaktPanel.deactivateFields();
                     jtbNew.setText("Neu");
                     toggleButtons(true);
                     jtbEdit.setEnabled(true);
-                    update();
+                    //update();
                 }
             }
         });

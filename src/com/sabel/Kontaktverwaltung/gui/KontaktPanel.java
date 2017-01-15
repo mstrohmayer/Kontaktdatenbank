@@ -23,7 +23,9 @@ public class KontaktPanel extends JPanel {
     public KontaktPanel(Kontakt kontakt){
         this.kontakt = kontakt;
         initComponents();
+        setKontakt(kontakt);
     }
+
     private void initComponents() {
         String[] labelText = {"Name","Vorname","Telefon","Email"};
         this.setLayout(new BoxLayout(this,BoxLayout.Y_AXIS));
@@ -66,7 +68,7 @@ public class KontaktPanel extends JPanel {
         jTextFields[2].setText(kontakt.gibNummer("privat"));
         jTextFields[3].setText(kontakt.gibEmail("privat"));
         jtBorder.setTitle("ID: " + kontakt.getID());
-        this.setBorder(jtBorder);
+        this.repaint();
     }
 
     public void storeKontakt(){

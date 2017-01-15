@@ -1,24 +1,25 @@
 package com.sabel.Kontaktverwaltung.model;
 
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by Matthias on 12.01.2017.
  */
 public class Kontakt {
-    private HashMap<String,String> emailAdressen;
+    private static int letzteID;
+
+    private Map<String,String> emailAdressen;
     private int id;
-    private static int letzteID = 1;
     private String name;
-    private HashMap<String,String> telefonNummern;
+    private Map<String,String> telefonNummern;
     private String vorname;
 
     public Kontakt(){
-        emailAdressen = new HashMap<>();
+        super();
         id = letzteID++;
-        name = "";
+        emailAdressen = new HashMap<>();
         telefonNummern = new HashMap<>();
-        vorname = "";
     }
 
     public Kontakt(String name){
