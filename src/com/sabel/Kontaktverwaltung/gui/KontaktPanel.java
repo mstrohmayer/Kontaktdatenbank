@@ -50,6 +50,7 @@ public class KontaktPanel extends JPanel {
             jTextFields[i].setEnabled(true);
         }
     }
+
     public void deactivateFields(){
         for (int i = 0; i<jTextFields.length;i++){
             jTextFields[i].setEnabled(false);
