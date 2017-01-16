@@ -17,7 +17,7 @@ public class Kontakt {
 
     public Kontakt(){
         super();
-        id = letzteID++;
+        id = ++letzteID;
         emailAdressen = new HashMap<>();
         telefonNummern = new HashMap<>();
     }

@@ -7,6 +7,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.TitledBorder;
+import java.awt.Color;
 import java.awt.FlowLayout;
 
 /**
@@ -19,10 +20,9 @@ public class KontaktPanel extends JPanel {
     private JLabel[] jLabels;
     private TitledBorder jtBorder;
 
-    public KontaktPanel(Kontakt kontakt){
-        this.kontakt = kontakt;
-        initComponents();
-        setKontakt(kontakt);
+    public KontaktPanel(){
+        this.initComponents();
+        this.deactivateFields();
     }
 
     private void initComponents() {
@@ -36,17 +36,13 @@ public class KontaktPanel extends JPanel {
             jPanels[i].setLayout(new FlowLayout(FlowLayout.RIGHT));
             jLabels[i] = new JLabel(labelText[i]);
             jTextFields[i] = new JTextField(30);
+            jTextFields[i].setDisabledTextColor(Color.BLUE);
             jPanels[i].add(jLabels[i]);
             jPanels[i].add(jTextFields[i]);
             this.add(jPanels[i]);
         }
-        jtBorder = new TitledBorder("ID: "+ kontakt.getID());
+        jtBorder = new TitledBorder("ID: ");
         this.setBorder(jtBorder);
-
-    }
-
-    public Kontakt getKontakt(){
-        return kontakt;
     }
 
     public void activateFields(){
@@ -67,6 +63,7 @@ public class KontaktPanel extends JPanel {
         jTextFields[2].setText(kontakt.gibNummer("privat"));
         jTextFields[3].setText(kontakt.gibEmail("privat"));
         jtBorder.setTitle("ID: " + kontakt.getID());
+        jTextFields[0].requestFocus();
         this.repaint();
     }
 

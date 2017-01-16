@@ -18,19 +18,20 @@ import java.awt.event.ActionListener;
  */
 public class MainWindow extends JFrame{
     private Container c;
-    private Datenbank db;
     private KontaktPanel kontaktPanel;
-    private Kontakt angezeigerKontakt;
-    private JPanel jpWest, jpEast, jpSouth;
+    private JPanel jpWest, jpEast, jpSouth, jpCenter;
     private JToggleButton jtbNew, jtbEdit;
     private JButton jbLeft, jbRight, jbSearch;
+
+    private Datenbank db;
+    private Kontakt angezeigerKontakt;
     private int index;
 
     public MainWindow(){
         super("Kontakte");
         db = new Datenbank();
-        angezeigerKontakt = db.gibKontakt(0);
-        index = angezeigerKontakt.getID();
+        index = 0;
+        angezeigerKontakt = db.gibKontakt(index);
 
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
         this.initComponents();
@@ -41,17 +42,14 @@ public class MainWindow extends JFrame{
     }
 
     private void initComponents() {
-
         c = this.getContentPane();
         jpWest = new JPanel();
         jbLeft = new JButton("<");
         jpWest.add(jbLeft);
-        c.add(jpWest, BorderLayout.WEST);
 
         jpEast = new JPanel();
         jbRight = new JButton(">");
         jpEast.add(jbRight);
-        c.add(jpEast, BorderLayout.EAST);
 
         jpSouth = new JPanel();
         jbSearch = new JButton("Suchen");
@@ -60,15 +58,19 @@ public class MainWindow extends JFrame{
         jpSouth.add(jbSearch);
         jpSouth.add(jtbEdit);
         jpSouth.add(jtbNew);
-        c.add(jpSouth, BorderLayout.SOUTH);  //Zeit wäre jetzt aus :-(
 
-        kontaktPanel = new KontaktPanel(angezeigerKontakt);
-        kontaktPanel.deactivateFields();
-        c.add(kontaktPanel, BorderLayout.CENTER);
+        jpCenter = new JPanel();
+        kontaktPanel = new KontaktPanel();
+        kontaktPanel.setKontakt(angezeigerKontakt);
+        jpCenter.add(kontaktPanel);
 
+        c.add(jpWest, BorderLayout.WEST);
+        c.add(jpSouth, BorderLayout.SOUTH);
+        c.add(jpEast, BorderLayout.EAST);
+        c.add(jpCenter, BorderLayout.CENTER);
     }
 
-    private void update(){
+    private void akutalisiereKontakt(){
         angezeigerKontakt = db.gibKontakt(index);
         kontaktPanel.setKontakt(angezeigerKontakt);
     }
@@ -83,17 +85,18 @@ public class MainWindow extends JFrame{
         jbLeft.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-                int size = db.anzahlKontakte();
-                index = ((size + index) - 1) % size;
-                update();
+                index--;
+                if (index == -1){
+                    index = db.anzahlKontakte()-1;
+                }
+                akutalisiereKontakt();
             }
         });
         jbRight.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-                int size = db.anzahlKontakte();
-                index = (index + 1) % size;
-                update();
+                index = (index + 1) % db.anzahlKontakte();
+                akutalisiereKontakt();
             }
         });
 
@@ -106,8 +109,8 @@ public class MainWindow extends JFrame{
                 }
                 if (db.suchen(suche) != null){
                     angezeigerKontakt = db.suchen(suche);
-                    index = angezeigerKontakt.getID();
-                    update();
+                    index = angezeigerKontakt.getID()-1;
+                    akutalisiereKontakt();
                 }else{
                     JOptionPane.showMessageDialog(MainWindow.this,"Kontakt nicht gefunden!");
                     return;
@@ -124,8 +127,7 @@ public class MainWindow extends JFrame{
                     kontaktPanel.activateFields();
                 }else {
                     kontaktPanel.storeKontakt();
-                    angezeigerKontakt = kontaktPanel.getKontakt();
-                    db.hinzufuegen(angezeigerKontakt);
+
                     kontaktPanel.deactivateFields();
                     jtbEdit.setText("Bearbeiten");
                     toggleButtons(true);
@@ -141,12 +143,14 @@ public class MainWindow extends JFrame{
                     toggleButtons(false);
                     jtbNew.setText("Fertig");
                     kontaktPanel.activateFields();
-                    kontaktPanel.setKontakt(new Kontakt());
+
+                    angezeigerKontakt = new Kontakt();
+                    kontaktPanel.setKontakt(angezeigerKontakt);
                 }else {
                     kontaktPanel.storeKontakt();
-                    angezeigerKontakt = kontaktPanel.getKontakt();
                     db.hinzufuegen(angezeigerKontakt);
                     index = db.anzahlKontakte()-1;
+
                     kontaktPanel.deactivateFields();
                     jtbNew.setText("Neu");
                     toggleButtons(true);
