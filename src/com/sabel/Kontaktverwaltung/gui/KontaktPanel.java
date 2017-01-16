@@ -13,11 +13,10 @@ import java.awt.FlowLayout;
 /**
  * Created by Matthias on 12.01.2017.
  */
-public class KontaktPanel extends JPanel {
+@SuppressWarnings("ALL")
+class KontaktPanel extends JPanel {
     private Kontakt kontakt;
-    private JPanel[] jPanels;
     private JTextField[] jTextFields;
-    private JLabel[] jLabels;
     private TitledBorder jtBorder;
 
     public KontaktPanel(){
@@ -28,9 +27,9 @@ public class KontaktPanel extends JPanel {
     private void initComponents() {
         String[] labelText = {"Name","Vorname","Telefon","Email"};
         this.setLayout(new BoxLayout(this,BoxLayout.Y_AXIS));
-        jPanels = new JPanel[4];
+        JPanel[] jPanels = new JPanel[4];
         jTextFields = new JTextField[4];
-        jLabels = new JLabel[4];
+        JLabel[] jLabels = new JLabel[4];
         for (int i = 0; i < jLabels.length; i++){
             jPanels[i] = new JPanel();
             jPanels[i].setLayout(new FlowLayout(FlowLayout.RIGHT));
@@ -46,14 +45,14 @@ public class KontaktPanel extends JPanel {
     }
 
     public void activateFields(){
-        for (int i = 0; i<jTextFields.length;i++){
-            jTextFields[i].setEnabled(true);
+        for (JTextField jTextField : jTextFields) {
+            jTextField.setEnabled(true);
         }
     }
 
     public void deactivateFields(){
-        for (int i = 0; i<jTextFields.length;i++){
-            jTextFields[i].setEnabled(false);
+        for (JTextField jTextField : jTextFields) {
+            jTextField.setEnabled(false);
         }
     }
 
@@ -61,8 +60,8 @@ public class KontaktPanel extends JPanel {
         this.kontakt = k;
         jTextFields[0].setText(kontakt.getName());
         jTextFields[1].setText(kontakt.getVorname());
-        jTextFields[2].setText(kontakt.gibNummer("privat"));
-        jTextFields[3].setText(kontakt.gibEmail("privat"));
+        jTextFields[2].setText(kontakt.gibNummer());
+        jTextFields[3].setText(kontakt.gibEmail());
         jtBorder.setTitle("ID: " + kontakt.getID());
         jTextFields[0].requestFocus();
         this.repaint();
@@ -71,7 +70,7 @@ public class KontaktPanel extends JPanel {
     public void storeKontakt(){
         kontakt.setName(jTextFields[0].getText());
         kontakt.setVorname(jTextFields[1].getText());
-        kontakt.telefonNummerHinzufuegen("privat",jTextFields[2].getText());
-        kontakt.emailHinzufuegen("privat",jTextFields[3].getText());
+        kontakt.telefonNummerHinzufuegen(jTextFields[2].getText());
+        kontakt.emailHinzufuegen(jTextFields[3].getText());
     }
 }

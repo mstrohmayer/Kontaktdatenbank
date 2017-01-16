@@ -7,8 +7,9 @@ import java.util.List;
 /**
  * Created by Matthias on 12.01.2017.
  */
+@SuppressWarnings("ALL")
 public class Datenbank {
-    private List<Kontakt> kontakte;
+    private final List<Kontakt> kontakte;
 
     public Datenbank() {
         kontakte = new ArrayList<>();
@@ -37,19 +38,19 @@ public class Datenbank {
                 return foundKontakt;
             }
         }
-        return foundKontakt;
+        return null;
     }
 
     private void generiereTestdaten() {
         Kontakt k1 = new Kontakt("Erster");
         Kontakt k2 = new Kontakt("Zweiter");
         Kontakt k3 = new Kontakt("Dritter");
-        k1.emailHinzufuegen("privat", "heinz@irgend.wo");
-        k2.emailHinzufuegen("privat", "hugo@web.de");
-        k3.emailHinzufuegen("privat", "heino@orf.at");
-        k1.telefonNummerHinzufuegen("privat", "017048110815");
-        k2.telefonNummerHinzufuegen("privat", "015632546515");
-        k3.telefonNummerHinzufuegen("privat", "089 3395545");
+        k1.emailHinzufuegen("heinz@irgend.wo");
+        k2.emailHinzufuegen("hugo@web.de");
+        k3.emailHinzufuegen("heino@orf.at");
+        k1.telefonNummerHinzufuegen("017048110815");
+        k2.telefonNummerHinzufuegen("015632546515");
+        k3.telefonNummerHinzufuegen("089 3395545");
         kontakte.add(k1);
         kontakte.add(k2);
         kontakte.add(k3);

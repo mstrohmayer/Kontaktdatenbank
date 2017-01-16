@@ -6,13 +6,14 @@ import java.util.Map;
 /**
  * Created by Matthias on 12.01.2017.
  */
+@SuppressWarnings("ALL")
 public class Kontakt {
     private static int letzteID;
 
-    private Map<String,String> emailAdressen;
-    private int id;
+    private final Map<String,String> emailAdressen;
+    private final int id;
     private String name;
-    private Map<String,String> telefonNummern;
+    private final Map<String,String> telefonNummern;
     private String vorname;
 
     public Kontakt(){
@@ -27,8 +28,8 @@ public class Kontakt {
         this.name = name;
     }
 
-    public void emailHinzufuegen(String art, String email){
-        emailAdressen.put(art,email);
+    public void emailHinzufuegen(String email){
+        emailAdressen.put("privat",email);
     }
     public int getID(){
         return id;
@@ -42,16 +43,16 @@ public class Kontakt {
         return vorname;
     }
 
-    public String gibEmail(String art){
-        if(emailAdressen.containsKey(art)){
-            return emailAdressen.get(art);
+    public String gibEmail(){
+        if(emailAdressen.containsKey("privat")){
+            return emailAdressen.get("privat");
         }
         return null;
     }
 
-    public String gibNummer(String art){
-        if(telefonNummern.containsKey(art)){
-            return telefonNummern.get(art);
+    public String gibNummer(){
+        if(telefonNummern.containsKey("privat")){
+            return telefonNummern.get("privat");
         }
         return null;
     }
@@ -63,8 +64,8 @@ public class Kontakt {
     public void setVorname(String vorname){
         this.vorname = vorname;
     }
-    public void telefonNummerHinzufuegen(String art, String nummer){
-        telefonNummern.put(art,nummer);
+    public void telefonNummerHinzufuegen(String nummer){
+        telefonNummern.put("privat",nummer);
     }
 }
 

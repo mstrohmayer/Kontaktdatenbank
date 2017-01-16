@@ -10,16 +10,13 @@ import javax.swing.JPanel;
 import javax.swing.JToggleButton;
 import java.awt.BorderLayout;
 import java.awt.Container;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 /**
  * Created by Matthias on 12.01.2017.
  */
+@SuppressWarnings("ALL")
 public class MainWindow extends JFrame{
-    private Container c;
     private KontaktPanel kontaktPanel;
-    private JPanel jpWest, jpEast, jpSouth, jpCenter;
     private JToggleButton jtbNew, jtbEdit;
     private JButton jbLeft, jbRight, jbSearch;
 
@@ -42,16 +39,16 @@ public class MainWindow extends JFrame{
     }
 
     private void initComponents() {
-        c = this.getContentPane();
-        jpWest = new JPanel();
+        Container c = this.getContentPane();
+        JPanel jpWest = new JPanel();
         jbLeft = new JButton("<");
         jpWest.add(jbLeft);
 
-        jpEast = new JPanel();
+        JPanel jpEast = new JPanel();
         jbRight = new JButton(">");
         jpEast.add(jbRight);
 
-        jpSouth = new JPanel();
+        JPanel jpSouth = new JPanel();
         jbSearch = new JButton("Suchen");
         jtbEdit = new JToggleButton("Bearbeiten");
         jtbNew = new JToggleButton("Neu");
@@ -59,7 +56,7 @@ public class MainWindow extends JFrame{
         jpSouth.add(jtbEdit);
         jpSouth.add(jtbNew);
 
-        jpCenter = new JPanel();
+        JPanel jpCenter = new JPanel();
         kontaktPanel = new KontaktPanel();
         kontaktPanel.setKontakt(angezeigerKontakt);
         jpCenter.add(kontaktPanel);
@@ -82,80 +79,65 @@ public class MainWindow extends JFrame{
     }
 
     private void initEvents() {
-        jbLeft.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent actionEvent) {
-                index--;
-                if (index == -1){
-                    index = db.anzahlKontakte()-1;
-                }
+        jbLeft.addActionListener(actionEvent -> {
+            index--;
+            if (index == -1){
+                index = db.anzahlKontakte()-1;
+            }
+            akutalisiereKontakt();
+        });
+        jbRight.addActionListener(actionEvent -> {
+            index = (index + 1) % db.anzahlKontakte();
+            akutalisiereKontakt();
+        });
+
+        jbSearch.addActionListener(actionEvent -> {
+            String suche = JOptionPane.showInputDialog(MainWindow.this , "gesuchter Name: ");
+            if  (suche == null){
+                return;
+            }
+            if (db.suchen(suche) != null){
+                angezeigerKontakt = db.suchen(suche);
+                index = angezeigerKontakt.getID()-1;
                 akutalisiereKontakt();
+            }else{
+                JOptionPane.showMessageDialog(MainWindow.this,"Kontakt nicht gefunden!");
+                return;
             }
         });
-        jbRight.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent actionEvent) {
-                index = (index + 1) % db.anzahlKontakte();
-                akutalisiereKontakt();
+        jtbEdit.addActionListener(actionEvent -> {
+            if (jtbEdit.isSelected()){
+                jtbNew.setEnabled(false);
+                toggleButtons(false);
+                jtbEdit.setText("Fertig");
+                kontaktPanel.activateFields();
+            }else {
+                kontaktPanel.storeKontakt();
+
+                kontaktPanel.deactivateFields();
+                jtbEdit.setText("Bearbeiten");
+                toggleButtons(true);
+                jtbNew.setEnabled(true);
             }
         });
+        jtbNew.addActionListener(actionEvent -> {
+            if (jtbNew.isSelected()){
+                jtbEdit.setEnabled(false);
+                toggleButtons(false);
+                jtbNew.setText("Fertig");
+                kontaktPanel.activateFields();
 
-        jbSearch.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent actionEvent) {
-                String suche = JOptionPane.showInputDialog(MainWindow.this , "gesuchter Name: ");
-                if  (suche == null){
-                    return;
-                }
-                if (db.suchen(suche) != null){
-                    angezeigerKontakt = db.suchen(suche);
-                    index = angezeigerKontakt.getID()-1;
-                    akutalisiereKontakt();
-                }else{
-                    JOptionPane.showMessageDialog(MainWindow.this,"Kontakt nicht gefunden!");
-                    return;
-                }
-            }
-        });
-        jtbEdit.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent actionEvent) {
-                if (jtbEdit.isSelected()){
-                    jtbNew.setEnabled(false);
-                    toggleButtons(false);
-                    jtbEdit.setText("Fertig");
-                    kontaktPanel.activateFields();
-                }else {
-                    kontaktPanel.storeKontakt();
+                angezeigerKontakt = new Kontakt();
+                kontaktPanel.setKontakt(angezeigerKontakt);
+            }else {
+                kontaktPanel.storeKontakt();
+                db.hinzufuegen(angezeigerKontakt);
+                index = db.anzahlKontakte()-1;
 
-                    kontaktPanel.deactivateFields();
-                    jtbEdit.setText("Bearbeiten");
-                    toggleButtons(true);
-                    jtbNew.setEnabled(true);
-                }
-            }
-        });
-        jtbNew.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent actionEvent) {
-                if (jtbNew.isSelected()){
-                    jtbEdit.setEnabled(false);
-                    toggleButtons(false);
-                    jtbNew.setText("Fertig");
-                    kontaktPanel.activateFields();
-
-                    angezeigerKontakt = new Kontakt();
-                    kontaktPanel.setKontakt(angezeigerKontakt);
-                }else {
-                    kontaktPanel.storeKontakt();
-                    db.hinzufuegen(angezeigerKontakt);
-                    index = db.anzahlKontakte()-1;
-
-                    kontaktPanel.deactivateFields();
-                    jtbNew.setText("Neu");
-                    toggleButtons(true);
-                    jtbEdit.setEnabled(true);
-                }
+                kontaktPanel.deactivateFields();
+                jtbNew.setText("Neu");
+                toggleButtons(true);
+                jtbEdit.setEnabled(true);
             }
         });
     }
